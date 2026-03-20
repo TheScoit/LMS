@@ -4,9 +4,27 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader,CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { authClient } from "@/lib/auth-client"
 import { GithubIcon } from "lucide-react"
+import { toast } from "sonner"
 
 export default function LoginPage(){
+
+    async function signInwithGithub(){
+        await authClient.signIn.social({
+            provider: 'github',
+            callbackURL : '/',
+            fetchOptions : {
+                onSuccess: () => {
+                    toast.success('Signed in with Github, you will be redirected...');
+                },
+                onError: (error) =>{
+                    toast.error(error.error.message);
+                }
+            }
+        })
+    }
+
     return (
         <div>
             <Card className="p-5">
@@ -16,7 +34,7 @@ export default function LoginPage(){
                 </CardHeader>
 
                 <CardContent className="flex flex-col gap-4">
-                    <Button className="w-full" variant="outline">
+                    <Button onClick={signInwithGithub} className="w-full" variant="outline" >
                         <GithubIcon className="size-4"/>
                         Sign in with Github</Button>
                 
